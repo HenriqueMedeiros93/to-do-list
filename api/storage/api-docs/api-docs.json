@@ -1,0 +1,276 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Teste",
+        "description": "Esta é a documentação da API de Teste",
+        "contact": {
+            "email": "contato@exemplo.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/task": {
+            "get": {
+                "tags": [
+                    "TodoList"
+                ],
+                "summary": "Listar todas as atividades",
+                "operationId": "4b84f7e07510b33adb804a6647605439",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pending",
+                                "done"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "description": "Número de itens por página",
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "description": "Número da página",
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de tarefas com paginação e filtro",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TaskModel"
+                                            }
+                                        },
+                                        "page": {
+                                            "type": "integer"
+                                        },
+                                        "lastPage": {
+                                            "type": "integer"
+                                        },
+                                        "pageSize": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "TodoList"
+                ],
+                "summary": "Criar uma nova tarefa",
+                "operationId": "ef157541cd0c55405b2a87b9be1c25e4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTaskDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tarefa criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/task/{id}": {
+            "put": {
+                "tags": [
+                    "TodoList"
+                ],
+                "summary": "Atualiza uma  tarefa",
+                "operationId": "504ab8b0162e0267a92be8504789c591",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTaskDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tarefa criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TaskModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "TodoList"
+                ],
+                "summary": "Deletar uma tarefa",
+                "operationId": "b3040d9bcf5614873ba1d76cd86260a0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deletado"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreateTaskDto": {
+                "title": "CreateTaskDto",
+                "required": [
+                    "title",
+                    "status"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Estudar Laravel"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Revisar controllers, services e repositórios",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "done"
+                        ],
+                        "example": "pending"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateTaskDto": {
+                "title": "UpdateTaskDto",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Atualizar tarefa"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Nova descrição da tarefa",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "done"
+                        ],
+                        "example": "done"
+                    }
+                },
+                "type": "object"
+            },
+            "TaskModel": {
+                "title": "Task",
+                "required": [
+                    "title",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Estudar Laravel"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Revisar controllers, services e repositórios"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "pending"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "TodoList",
+            "description": "TodoList"
+        }
+    ]
+}
